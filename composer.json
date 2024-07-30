@@ -1,0 +1,13 @@
+{
+    "name": "unasonline/unas-connect",
+    "version": "0.1.1",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "UnasOnline\\UnasConnect\\": "src/"
+        }
+    },
+    "require": {
+        "spatie/array-to-xml": "^3.3"
+    }
+}
