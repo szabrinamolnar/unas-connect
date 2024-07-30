@@ -28,7 +28,7 @@ $response = $apiClient->apiCall('getOrderStatus');
 
 ### ClientCacheInterface
 
-Implement `UnasOnline\UnasConnect\Api` to cache API configuration:
+Implement `UnasOnline\UnasConnect\Api\ClientCacheInterface` to cache API configuration:
 
 ```php
 <?php
