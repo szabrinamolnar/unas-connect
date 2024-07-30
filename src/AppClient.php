@@ -35,7 +35,7 @@ class AppClient
      * @param string $shop_id
      * @param string $time
      * @param string $token
-     * 
+     *
      * @return array
      */
     public function requestApiKey($shop_id, $time, $token): array
