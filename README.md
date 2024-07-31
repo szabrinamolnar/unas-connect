@@ -1,8 +1,20 @@
 # unas-connect
 
-## API client
+This package provides basic tools for interacting with [UNAS](https://unas.hu) stores in PHP applications.
 
-### Config options
+## Requirements
+
+ * PHP >=8
+ * PHP extensions:
+    * dom
+
+## Features
+
+### API client
+
+API docs can be found [here](https://unas.hu/tudastar/api).
+
+#### Config options
 
 | Option | Type | Default | Description |
 | -- | -- | -- | -- |
@@ -10,7 +22,7 @@
 | curlTimeout | int | 120 | Override curl timeout |
 | curlConnectTimeout | int | 120 | Override curl connect timeout |
 
-### Simple api request
+#### Simple api request
 
 ```php
 <?php
@@ -26,7 +38,7 @@ $apiClient = new Client([
 $response = $apiClient->apiCall('getOrderStatus');
 ```
 
-### ClientCacheInterface
+#### ClientCacheInterface
 
 Implement `UnasOnline\UnasConnect\Api\ClientCacheInterface` to cache API configuration:
 
@@ -58,7 +70,7 @@ class ClientCacheExample
 }
 ```
 
-### API request with cache
+#### API request with cache
 
 ```php
 <?php
@@ -75,7 +87,7 @@ $apiClient = new Client([
 $response = $apiClient->apiCall('getOrderStatus');
 ```
 
-## App integration
+### App integration
 
 ```php
 <?php

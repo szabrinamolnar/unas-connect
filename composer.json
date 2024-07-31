@@ -8,6 +8,8 @@
         }
     },
     "require": {
+        "php" : "^8.0",
+        "ext-dom": "*",
         "spatie/array-to-xml": "^3.3"
     }
 }
