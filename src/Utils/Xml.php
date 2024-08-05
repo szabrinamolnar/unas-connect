@@ -11,7 +11,7 @@ class Xml
      *
      * @return array
      */
-    public static function simpleXmlToArray(SimpleXMLElement $xml): array
+    public static function simpleXmlToArray(SimpleXMLElement $xml)
     {
         $array = (array)$xml;
 
