@@ -24,24 +24,24 @@ class AppClient
      * @param string $time
      * @param string $token
      * @param string $hmac
-     * @return bool true if request is verified, false on fail
+     * @return true|string true if request is verified, error message on fail
      */
-    public function verifyRequest(string $shop_id, string $time, string $token, string $hmac): bool
+    public function verifyRequest(string $shop_id, string $time, string $token, string $hmac): true|string
     {
         if (empty(trim($hmac))) {
-            return false;
+            return 'empty hmac';
         }
 
         if ($this->generateHmac($shop_id, $time, $token) !== $hmac) {
-            return false;
+            return 'invalid hmac';
         }
 
         if (!$this->verifyTime($time)) {
-            return false;
+            return 'timeout';
         }
 
         if (!self::verifyHeaders()) {
-            return false;
+            return 'invalid referer';
         }
 
         return true;
