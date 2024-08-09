@@ -91,7 +91,9 @@ class AppClient
             'https://shop.unas.eu/'
         ];
 
-        return in_array(Arrays::get($headers, 'Referer', ''), $accept);
+        $referer = Arrays::get($headers, 'Referer', '');
+
+        return in_array($referer, $accept) || empty($referer);
     }
 
     /**
