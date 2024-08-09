@@ -2,6 +2,8 @@
 
 namespace UnasOnline\UnasConnect;
 
+use UnasOnline\UnasConnect\Utils\Arrays;
+
 class AppClient
 {
     private string $unasAppId;
@@ -16,6 +18,36 @@ class AppClient
     }
 
     /**
+     * Verify unas app request data
+     *
+     * @param string $shop_id
+     * @param string $time
+     * @param string $token
+     * @param string $hmac
+     * @return bool true if request is verified, false on fail
+     */
+    public function verifyRequest(string $shop_id, string $time, string $token, string $hmac): bool
+    {
+        if (empty(trim($hmac))) {
+            return false;
+        }
+
+        if ($this->generateHmac($shop_id, $time, $token) !== $hmac) {
+            return false;
+        }
+
+        if (!$this->verifyTime($time)) {
+            return false;
+        }
+
+        if (!self::verifyHeaders()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Generate HMAC to verify UNAS request
      *
      * @param string $shop_id
@@ -27,6 +59,53 @@ class AppClient
     {
         $query = http_build_query(compact('shop_id', 'time', 'token'));
         return hash_hmac('sha256', $query, $this->unasAppSecret);
+    }
+
+    /**
+     * Verify timestamp
+     *
+     * @param string|int $time a valid unix timestamp
+     * @return bool true if $time is newer than 120 seconds
+     */
+    public static function verifyTime(string|int $time): bool
+    {
+        $timestamp = (int)$time;
+        $currentTime = time();
+        $difference = $currentTime - $timestamp;
+
+        return $difference < 120;
+    }
+
+    /**
+     * Verify HTTP headers
+     */
+    public static function verifyHeaders(): bool
+    {
+        $headers = self::getHttpHeaders();
+        if ($headers === false) {
+            return false;
+        }
+
+        $accept = [
+            'https://shop.unas.hu/',
+            'https://shop.unas.eu/'
+        ];
+
+        return in_array(Arrays::get($headers, 'Referer', ''), $accept);
+    }
+
+    /**
+     * Get HTTP headers
+     */
+    protected static function getHttpHeaders(): false|array
+    {
+        if (function_exists('getallheaders')) {
+            return getallheaders();
+        } elseif (function_exists('apache_request_headers')) {
+            return apache_request_headers();
+        } else {
+            return false;
+        }
     }
 
     /**
