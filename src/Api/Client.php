@@ -52,9 +52,11 @@ class Client
             
             if (!is_null($response)) {
                 $tz = new DateTimeZone('Europe/Budapest');
-                $expired = new DateTime($response['Expire'], $tz) <= new DateTime('now', $tz);
+                $format = "Y.m.d H:i:s";
+                $expireTime = DateTime::createFromFormat($format, $response['Expire'], $tz);
+                $expired = $expireTime <= new DateTime('now', $tz);
                 error_log(json_encode([
-                    'exp' => new DateTime($response['Expire'], $tz),
+                    'exp' => $expireTime,
                     'now' => new DateTime('now', $tz),
                     'result' => $expired,
                 ], JSON_PRETTY_PRINT));
