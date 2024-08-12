@@ -55,14 +55,12 @@ class Client
                 $format = "Y.m.d H:i:s";
                 $expireTime = DateTime::createFromFormat($format, $response['Expire'], $tz);
                 $expired = $expireTime <= new DateTime('now', $tz);
-                error_log(json_encode([
-                    'exp' => $expireTime,
-                    'now' => new DateTime('now', $tz),
-                    'result' => $expired,
-                ], JSON_PRETTY_PRINT));
-                $this->apiToken = $response['Token'];
-                $this->permissions = $response['Permissions']['Permission'];
-                $this->subscription = $response['Subscription'];
+
+                if (!$expired) {
+                    $this->apiToken = $response['Token'];
+                    $this->permissions = $response['Permissions']['Permission'];
+                    $this->subscription = $response['Subscription'];
+                }
             }
         }
     }
