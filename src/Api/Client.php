@@ -2,6 +2,8 @@
 
 namespace UnasOnline\UnasConnect\Api;
 
+use DateTime;
+use DateTimeZone;
 use Spatie\ArrayToXml\ArrayToXml;
 use UnasOnline\UnasConnect\Exception\InvalidApiConfigException;
 use UnasOnline\UnasConnect\Exception\LoginException;
@@ -49,6 +51,13 @@ class Client
             $response = $this->cache->restoreUnasApiLogin();
             
             if (!is_null($response)) {
+                $tz = new DateTimeZone('Europe/Budapest');
+                $expired = new DateTime($response['Expire'], $tz) <= new DateTime('now', $tz);
+                error_log(json_encode([
+                    'exp' => new DateTime($response['Expire'], $tz),
+                    'now' => new DateTime('now', $tz),
+                    'result' => $expired,
+                ], JSON_PRETTY_PRINT));
                 $this->apiToken = $response['Token'];
                 $this->permissions = $response['Permissions']['Permission'];
                 $this->subscription = $response['Subscription'];
