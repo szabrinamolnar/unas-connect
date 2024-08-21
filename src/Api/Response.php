@@ -10,6 +10,13 @@ class Response
     private string $content;
     private string $error;
     
+    /**
+     * Construct new instance of the Response class
+     *
+     * @param int         $statusCode status code of the response
+     * @param string|bool $content response content
+     * @param string      $error error message in case of failed request
+     */
     public function __construct(int $statusCode, string|bool $content, string $error)
     {
         $this->content = $content;
