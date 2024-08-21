@@ -184,8 +184,7 @@ class Client
     public function login(): array
     {
         $req = [
-            'ApiKey' => $this->apiKey,
-            'WebshopInfo' => false
+            'ApiKey' => $this->apiKey
         ];
 
         $response = $this->apiCall('login', $req, 'Params', true)->getResponse();
