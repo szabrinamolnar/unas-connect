@@ -69,6 +69,7 @@ class Client
      * Validate configuration
      *
      * @param array $config config array to validate
+     *
      * @return ?string error message, null if config is valid
      */
     protected function validateConfig(array $config): ?string
@@ -88,7 +89,7 @@ class Client
      * @param string $rootElement  root element of the output XML
      * @param bool   $withoutToken make api call without bearer token
      *
-     * @return Response
+     * @return Response API response object (contains status, error & content)
      */
     public function apiCall(string $method, array $xml, string $rootElement = '', bool $withoutToken = false): Response
     {
@@ -112,7 +113,7 @@ class Client
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_POST => 1,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYHOST => false
         ];
 
         $ch = curl_init($this->apiUrl . $method);
@@ -125,8 +126,8 @@ class Client
             ]);
         }
 
-        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $content = curl_exec($ch);
+        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
         curl_close($ch);
 

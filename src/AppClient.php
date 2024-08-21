@@ -78,6 +78,8 @@ class AppClient
 
     /**
      * Verify HTTP headers
+     * 
+     * @return bool true if referer is one of the accepted values
      */
     public static function verifyHeaders(): bool
     {
@@ -97,7 +99,9 @@ class AppClient
     }
 
     /**
-     * Get HTTP headers
+     * Access HTTP headers in a server-agnostic way
+     * 
+     * @return false|array all headers in an array, or false if cannot determine
      */
     protected static function getHttpHeaders(): false|array
     {
@@ -133,7 +137,7 @@ class AppClient
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_POST => 1,
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYHOST => false
         ];
 
         $request = compact('shop_id', 'time', 'token');
