@@ -16,7 +16,7 @@ class Xml
         $array = (array)$xml;
 
         if (count($array) === 0) {
-            return (string)$xml;
+            return [json_encode($xml)];
         }
 
         foreach ($array as $key => $value) {

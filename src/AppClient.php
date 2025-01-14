@@ -125,6 +125,20 @@ class AppClient
      */
     public function requestApiKey($shop_id, $time, $token): array
     {
+        return $this->request('requestApiKey', compact('shop_id', 'time', 'token'));
+    }
+
+    public function getBalance($shop_id, $api_key): array
+    {
+        return $this->request('getBalance', [
+            'shop_id' => $shop_id,
+            'time' => time(),
+            'token' => $api_key,
+        ]);
+    }
+
+    public function request(string $method, array $params): array
+    {
         $options = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HEADER => false,
@@ -140,11 +154,11 @@ class AppClient
             CURLOPT_SSL_VERIFYHOST => false
         ];
 
-        $request = compact('shop_id', 'time', 'token');
-        $request['hmac'] = $this->generateHmac($shop_id, $time, $token);
-        $options[CURLOPT_POSTFIELDS] = http_build_query($request);
+        $query = http_build_query($params);
+        $params['hmac'] = hash_hmac('sha256', $query, $this->unasAppSecret);
+        $options[CURLOPT_POSTFIELDS] = http_build_query($params);
 
-        $ch = curl_init($this->unasAppUrl . '/requestApiKey');
+        $ch = curl_init($this->unasAppUrl . "/$method");
         curl_setopt_array($ch, $options);
 
         $content = curl_exec($ch);

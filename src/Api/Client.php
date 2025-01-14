@@ -91,7 +91,7 @@ class Client
      *
      * @return Response API response object (contains status, error & content)
      */
-    public function apiCall(string $method, array $xml, string $rootElement = '', bool $withoutToken = false): Response
+    public function apiCall(string $method, array $xml, string $rootElement = 'Params', bool $withoutToken = false): Response
     {
         if (!$withoutToken && empty($this->apiToken)) {
             $this->login();
@@ -118,7 +118,7 @@ class Client
 
         $ch = curl_init($this->apiUrl . $method);
         curl_setopt_array($ch, $options);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, ArrayToXml::convert($xml, $rootElement ?? 'Params'));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, ArrayToXml::convert($xml, $rootElement));
 
         if (!$withoutToken) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
