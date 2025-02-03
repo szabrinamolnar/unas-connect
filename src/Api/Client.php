@@ -182,24 +182,34 @@ class Client
      * @throws LoginException
      */
     public function login(): array
-    {
-        $req = [
-            'ApiKey' => $this->apiKey
-        ];
+{
+    $req = [
+        'ApiKey' => $this->apiKey
+    ];
 
-        $response = $this->apiCall('login', $req, 'Params', true)->getResponse();
-        if (array_key_exists('error', $response)) {
-            throw new LoginException($response['error']);
-        }
-
-        $this->apiToken = $response['Token'];
-        $this->permissions = $response['Permissions']['Permission'];
-        $this->subscription = $response['Subscription'];
-        
-        if (!empty($this->cache)) {
-            $this->cache->cacheUnasApiLogin($response);
-        }
-
-        return $response;
+    $response = $this->apiCall('login', $req, 'Params', true)->getResponse();
+    if (array_key_exists('error', $response)) {
+        throw new LoginException($response['error']);
     }
+
+    $this->apiToken = $response['Token'];
+
+    if (isset($response['Permissions'])) {
+        if (is_array($response['Permissions']['Permission'])) {
+            $this->permissions = $response['Permissions']['Permission'];
+        } else {
+            $this->permissions = [$response['Permissions']['Permission']];
+        }
+    } else {
+        $this->permissions = [];
+    }
+
+    $this->subscription = $response['Subscription'];
+
+    if (!empty($this->cache)) {
+        $this->cache->cacheUnasApiLogin($response);
+    }
+
+    return $response;
+}
 }
